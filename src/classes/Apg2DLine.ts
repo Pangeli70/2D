@@ -5,6 +5,7 @@
  * @version 0.5.0 [APG 2018/11/25]
  * @version 0.8.0 [APG 2021/02/21] Porting to Deno
  * @version 0.9.2 [APG 2022/11/24] Github Beta
+ * @version 0.9.3 [APG 2022/12/11] Cleanup and Renaming
  * -----------------------------------------------------------------------
  */
 import { Apg2DPoint } from "./Apg2DPoint.ts";
@@ -16,87 +17,83 @@ import { eApg2DQuadrant } from "../enums/eApg2DQuadrant.ts";
  * It contains the necessary algebric and vectorial data
  */
 export class Apg2DLine {
-  p1: Apg2DPoint;
+  private _p1: Apg2DPoint;
 
-  p2: Apg2DPoint;
+  private _p2: Apg2DPoint;
 
-  deltaX: number;
+  private _deltaX: number;
 
-  deltaY: number;
+  private _deltaY: number;
 
-  slope: number;
+  private _slope: number;
+  get slope() { return this._slope; }
 
   /** Slope coefficient in angle */
-  angle: number;
+  private _angle: number;
+  get angle() { return this._angle; }
 
-  interceptY: number;
+  private _interceptY: number;
 
-  interceptX: number;
+  private _interceptX: number;
+  get interceptX() { return this._interceptX; }
 
-  length: number;
+  private _length: number;
+  get length() { return this._length; }
 
-  vector: Apg2DPoint;
+  private _vector: Apg2DPoint;
 
-  quadrant: eApg2DQuadrant;
+  private _quadrant: eApg2DQuadrant;
+  get quadrant() { return this._quadrant; }
 
-  /** 
-   * Creates a straight line object given 2 points. 
-   */
+
+
   constructor(ap1: Apg2DPoint, ap2: Apg2DPoint) {
-    this.p1 = Apg2DPoint.Clone(ap1);
-    this.p2 = Apg2DPoint.Clone(ap2);
+    this._p1 = Apg2DPoint.Clone(ap1);
+    this._p2 = Apg2DPoint.Clone(ap2);
 
-    this.deltaX = ap2.x - ap1.x;
-    this.deltaY = ap2.y - ap1.y;
-    this.slope = this.deltaY / this.deltaX;
+    this._deltaX = ap2.x - ap1.x;
+    this._deltaY = ap2.y - ap1.y;
+    this._slope = this._deltaY / this._deltaX;
 
-    this.interceptY = ap1.y - this.slope * ap1.x;
+    this._interceptY = ap1.y - this._slope * ap1.x;
 
     // Calculate the X interception (useful for vertical lines)
-    if (this.deltaX === 0) {
-      this.interceptX = ap2.x;
+    if (this._deltaX === 0) {
+      this._interceptX = ap2.x;
     } else {
-      this.interceptX = this.interceptY * -1 / this.slope;
-      if (Object.is(this.interceptX, -0)) {
-        this.interceptX = 0;
+      this._interceptX = this._interceptY * -1 / this._slope;
+      if (Object.is(this._interceptX, -0)) {
+        this._interceptX = 0;
       }
     }
 
-    this.length = Math.sqrt(
-      this.deltaX * this.deltaX + this.deltaY * this.deltaY,
+    this._length = Math.sqrt(
+      this._deltaX * this._deltaX + this._deltaY * this._deltaY,
     );
 
-    this.vector = new Apg2DPoint(
-      this.deltaX / this.length,
-      this.deltaY / this.length,
+    this._vector = new Apg2DPoint(
+      this._deltaX / this._length,
+      this._deltaY / this._length,
     );
 
-    if (this.deltaX >= 0) {
-      if (this.deltaY >= 0) {
-        this.quadrant = eApg2DQuadrant.posXposY;
+    if (this._deltaX >= 0) {
+      if (this._deltaY >= 0) {
+        this._quadrant = eApg2DQuadrant.posXposY;
       } else {
-        this.quadrant = eApg2DQuadrant.posXnegY;
+        this._quadrant = eApg2DQuadrant.posXnegY;
       }
     } else {
-      if (this.deltaY >= 0) {
-        this.quadrant = eApg2DQuadrant.negXposY;
+      if (this._deltaY >= 0) {
+        this._quadrant = eApg2DQuadrant.negXposY;
       } else {
-        this.quadrant = eApg2DQuadrant.negXnegY;
+        this._quadrant = eApg2DQuadrant.negXnegY;
       }
     }
 
-    this.angle = Apg2DUtility.degreesFromSlope(this.slope, this.quadrant);
+    this._angle = Apg2DUtility.DegreesFromSlope(this._slope, this._quadrant);
   }
 
-  /**
-   * Static factory function creates a line object starting from the
-   * four x,y values.
-   * @param ax1 
-   * @param ay1 
-   * @param ax2 
-   * @param ay2 
-   */
-  public static Factory(
+  public static Build(
     ax1: number,
     ay1: number,
     ax2: number,
@@ -111,26 +108,26 @@ export class Apg2DLine {
    * Calculates the intersection point with another line.
    * @remarks If lines are parallel returns undefined
    */
-  public Intersection(aline: Apg2DLine): Apg2DPoint | undefined {
+  public intersection(aline: Apg2DLine): Apg2DPoint | undefined {
     // Check for parallels
-    if (this.slope === aline.slope) {
+    if (this._slope === aline._slope) {
       return undefined;
     }
 
     const r: Apg2DPoint = new Apg2DPoint(0, 0);
 
     // This line is vertical
-    if (this.slope === Infinity || this.slope === -Infinity) {
-      r.x = this.interceptX;
-      r.y = aline.slope * r.x + aline.interceptY;
+    if (this._slope === Infinity || this._slope === -Infinity) {
+      r.x = this._interceptX;
+      r.y = aline._slope * r.x + aline._interceptY;
     } // Other line is vertical
-    else if (aline.slope === Infinity || aline.slope === -Infinity) {
-      r.x = aline.interceptX;
-      r.y = this.slope * r.x + this.interceptY;
+    else if (aline._slope === Infinity || aline._slope === -Infinity) {
+      r.x = aline._interceptX;
+      r.y = this._slope * r.x + this._interceptY;
     } // Other cases
     else {
-      r.x = (this.interceptY - aline.interceptY) / (aline.slope - this.slope);
-      r.y = this.slope * r.x + this.interceptY;
+      r.x = (this._interceptY - aline._interceptY) / (aline._slope - this._slope);
+      r.y = this._slope * r.x + this._interceptY;
     }
 
     return r;
@@ -144,36 +141,35 @@ export class Apg2DLine {
    * specified point
    * @returns {Apg2DPoint[]} An array of 2 points following the versus of the line, 
    * or an empty array if the point don't belogns to the line
-   * @remarks If the line is vertical ... ??
    */
-  public PointsOverLine(apoint: Apg2DPoint, aradious: number): Apg2DPoint[] {
+  public pointsOverLine(apoint: Apg2DPoint, aradious: number): Apg2DPoint[] {
     const r: Apg2DPoint[] = [];
 
     // Check that the poin is over line
-    if (!this.Contains(apoint)) {
+    if (!this.contains(apoint)) {
       return r;
     }
 
     aradious = Math.abs(aradious);
 
     let dx = 1;
-    let dy = this.slope;
+    let dy = this._slope;
     // the line is vertical
-    if (this.slope === Infinity || this.slope === -Infinity) {
+    if (this._slope === Infinity || this._slope === -Infinity) {
       dx = 0;
       dy = aradious;
     } else {
-      const hypotenuse = Apg2DUtility.pythagoras(dx, dy);
+      const hypotenuse = Apg2DUtility.Pythagoras(dx, dy);
       dx = dx * aradious / hypotenuse;
-      dy = Math.abs(this.slope * dx);
+      dy = Math.abs(this._slope * dx);
     }
-    if (this.quadrant == eApg2DQuadrant.posXposY) {
+    if (this._quadrant == eApg2DQuadrant.posXposY) {
       r.push(new Apg2DPoint(apoint.x - dx, apoint.y - dy));
       r.push(new Apg2DPoint(apoint.x + dx, apoint.y + dy));
-    } else if (this.quadrant == eApg2DQuadrant.negXposY) {
+    } else if (this._quadrant == eApg2DQuadrant.negXposY) {
       r.push(new Apg2DPoint(apoint.x + dx, apoint.y - dy));
       r.push(new Apg2DPoint(apoint.x - dx, apoint.y + dy));
-    } else if (this.quadrant == eApg2DQuadrant.negXnegY) {
+    } else if (this._quadrant == eApg2DQuadrant.negXnegY) {
       r.push(new Apg2DPoint(apoint.x + dx, apoint.y + dy));
       r.push(new Apg2DPoint(apoint.x - dx, apoint.y - dy));
     } else {
@@ -184,52 +180,55 @@ export class Apg2DLine {
     return r;
   }
 
-  private _bisectorParallel(aline: Apg2DLine, aquadrant: eApg2DQuadrant) {
+  #bisectorParallel(aline: Apg2DLine, aquadrant: eApg2DQuadrant) {
     const p1 = new Apg2DPoint(
-      this.p1.x + this.deltaX / 2,
-      this.p1.y + this.deltaY / 2,
+      this._p1.x + this._deltaX / 2,
+      this._p1.y + this._deltaY / 2,
     );
     const p2 = new Apg2DPoint(
-      aline.p1.x + aline.deltaX / 2,
-      aline.p1.y + aline.deltaY / 2,
+      aline._p1.x + aline._deltaX / 2,
+      aline._p1.y + aline._deltaY / 2,
     );
 
-    const midPoint: Apg2DPoint = p1.HalfwayFrom(p2);
+    const midPoint: Apg2DPoint = p1.halfwayFrom(p2);
     let displacedMidPoint: Apg2DPoint;
     if (aquadrant == eApg2DQuadrant.posXposY) {
       const additionalAngle = 0;
       const newSlope = Math.tan(
-        Apg2DUtility.degToRad(this.angle + additionalAngle),
+        Apg2DUtility.DegToRad(this._angle + additionalAngle),
       );
-      const k = this.slope < 0 ? -1 : 1;
+      const k = this._slope < 0 ? -1 : 1;
       displacedMidPoint = new Apg2DPoint(
         midPoint.x + 1 * k,
         midPoint.y + newSlope * k,
       );
-    } else if (aquadrant == eApg2DQuadrant.negXposY) {
+    }
+    else if (aquadrant == eApg2DQuadrant.negXposY) {
       const additionalAngle = 90;
       const newSlope = Math.tan(
-        Apg2DUtility.degToRad(this.angle + additionalAngle),
+        Apg2DUtility.DegToRad(this._angle + additionalAngle),
       );
 
       displacedMidPoint = new Apg2DPoint(
         midPoint.x - 1,
         midPoint.y - newSlope,
       );
-    } else if (aquadrant == eApg2DQuadrant.negXnegY) {
+    }
+    else if (aquadrant == eApg2DQuadrant.negXnegY) {
       const additionalAngle = 180;
       const newSlope = Math.tan(
-        Apg2DUtility.degToRad(this.angle + additionalAngle),
+        Apg2DUtility.DegToRad(this._angle + additionalAngle),
       );
-      const k = this.slope < 0 ? -1 : 1;
+      const k = this._slope < 0 ? -1 : 1;
       displacedMidPoint = new Apg2DPoint(
         midPoint.x - 1 * k,
         midPoint.y - newSlope * k,
       );
-    } else {
+    }
+    else {
       const additionalAngle = 270;
       const newSlope = Math.tan(
-        Apg2DUtility.degToRad(this.angle + additionalAngle),
+        Apg2DUtility.DegToRad(this._angle + additionalAngle),
       );
       displacedMidPoint = new Apg2DPoint(
         midPoint.x + 1,
@@ -240,15 +239,15 @@ export class Apg2DLine {
     return new Apg2DLine(midPoint, displacedMidPoint); // TODO@9 check for quadrant and for horizontal
   }
 
-  private _bisector(
+  #bisector(
     aline: Apg2DLine,
     aquadrant: eApg2DQuadrant,
     aintersection: Apg2DPoint,
   ) {
     // Points over a line at a convenient distance to avoid problems with almost parallel lines
     // index 0 and index 1 points follow the versus of the line from smaller to bigger
-    const ptsOLThis: Apg2DPoint[] = this.PointsOverLine(aintersection, 100000);
-    const ptsOLArg: Apg2DPoint[] = aline.PointsOverLine(aintersection, 100000);
+    const ptsOLThis: Apg2DPoint[] = this.pointsOverLine(aintersection, 100000);
+    const ptsOLArg: Apg2DPoint[] = aline.pointsOverLine(aintersection, 100000);
 
     let pts0: Apg2DPoint[] = ptsOLThis;
     let pts1: Apg2DPoint[] = ptsOLArg;
@@ -256,18 +255,18 @@ export class Apg2DLine {
     let line0: Apg2DLine = { ...this };
     let line1: Apg2DLine = aline;
 
-    // in order to be able to manage the required bisector for the various quadrants
+    // To manage the required bisector for the various quadrants
     // it is important to determine the right countercockwise sequence of the
     // two lines based upon angle and then the points over line
     // the argument line preceeds the current line so swap order
-    if (aline.angle < this.angle) {
+    if (aline._angle < this._angle) {
       pts0 = ptsOLArg;
       pts1 = ptsOLThis;
       line0 = aline;
       line1 = this;
     }
 
-    const diff = Math.abs(line1.angle - line0.angle);
+    const diff = Math.abs(line1._angle - line0._angle);
 
     // Mid point between previous points depends on quadrant so we have to choose the
     // right points
@@ -298,7 +297,7 @@ export class Apg2DLine {
       }
     }
 
-    const midPoint: Apg2DPoint = p1.HalfwayFrom(p2);
+    const midPoint: Apg2DPoint = p1.halfwayFrom(p2);
 
     return new Apg2DLine(aintersection, midPoint);
   }
@@ -313,108 +312,102 @@ export class Apg2DLine {
    * calculated in the the quadrant where both lines have the same versus like the cartesian plane. 
    * @remarks If the lines are parallel returns the intermediate line
    */
-  public Bisector(
+  public bisector(
     aline: Apg2DLine,
     aquadrant: eApg2DQuadrant = eApg2DQuadrant.posXposY,
   ): Apg2DLine {
     let r: Apg2DLine;
-    const intersection: Apg2DPoint | undefined = this.Intersection(aline);
+    const intersection: Apg2DPoint | undefined = this.intersection(aline);
 
     // if lines are parallel
     if (intersection === undefined) {
       // if lines are vertical
-      if (this.slope === Infinity || this.slope === -Infinity) {
+      if (this._slope === Infinity || this._slope === -Infinity) {
         const p1 = new Apg2DPoint(-1, 0);
         const p2 = new Apg2DPoint(1, 0);
         const xaxis = new Apg2DLine(p1, p2);
-        const ip1 = <Apg2DPoint>this.Intersection(xaxis); // cant be null: already checked
-        const ip2 = <Apg2DPoint>aline.Intersection(xaxis); // cant be null: already checked
-        const ip3 = ip1.HalfwayFrom(ip2);
+        const ip1 = <Apg2DPoint>this.intersection(xaxis); // cant be null: already checked
+        const ip2 = <Apg2DPoint>aline.intersection(xaxis); // cant be null: already checked
+        const ip3 = ip1.halfwayFrom(ip2);
         const ip4 = new Apg2DPoint(ip3.x, ip3.y + 1);
         r = new Apg2DLine(ip3, ip4); // TODO @9 check for quadrant
       } else {
-        r = this._bisectorParallel(aline, aquadrant);
+        r = this.#bisectorParallel(aline, aquadrant);
       }
     } else {
-      r = this._bisector(aline, aquadrant, intersection);
+      r = this.#bisector(aline, aquadrant, intersection);
     }
     return r;
   }
+
 
   /** 
    * Determines the line perpendicular to this one and passing through the passed point
    * 
    * @param {Apg2DPoint} apoint: Point.
-   * @retunrs {Apg2DLine} New perpendicular line
+   * @returns {Apg2DLine} New perpendicular line
    * @remarks Any point is allowed belonging or not to this line
    */
-  public Perpendicular(apoint: Apg2DPoint): Apg2DLine {
-    // Oggetto retta perpendicolare alla retta data passante per il punto dato
-    let ldx = 0, ldy = 0, ld = 0;
+  public perpendicular(apoint: Apg2DPoint): Apg2DLine {
 
-    // Calcolo angolo retta perpendicolare per convenzione aumenta di 90°
-    ld = this.angle + 90;
+    let dx = 0, dy = 0, orthoAngle = 0;
 
-    // Controlla che non sia più di 360°
-    if (ld >= 360) ld -= 360;
+    orthoAngle = this._angle + 90;
 
-    // Calcola deltaX, deltaY e l in base all'inclinazione della retta perpendicolare
-    // Controlla anche per errori di arrotondamento funzione coseno
-    if (ld === 90) {
-      ldx = 0;
-      ldy = 1;
-    } else if (ld === 270) {
-      ldx = 0;
-      ldy = -1;
-    } else {
-      /** Calcola (A)ngolo (P)erpendicolare  in radianti */
-      const lap = Apg2DUtility.degToRad(ld);
-      ldx = Math.cos(lap);
-      ldy = Math.sin(lap);
+
+    if (orthoAngle >= 360) orthoAngle -= 360;
+
+    if (orthoAngle === 90) {
+      dx = 0;
+      dy = 1;
+    }
+    else if (orthoAngle === 270) {
+      dx = 0;
+      dy = -1;
+    }
+    else {
+      const orthoAngleInRadians = Apg2DUtility.DegToRad(orthoAngle);
+      dx = Math.cos(orthoAngleInRadians);
+      dy = Math.sin(orthoAngleInRadians);
     }
 
-    const pt = new Apg2DPoint(apoint.x + ldx, apoint.y + ldy);
+    const orthoPoint = new Apg2DPoint(apoint.x + dx, apoint.y + dy);
 
-    const r = new Apg2DLine(apoint, pt);
+    const r = new Apg2DLine(apoint, orthoPoint);
 
     return r;
   }
 
-  /** Calcola i dati relativi ai 4 possibili angoli e quadranti delimitati da due rette non parallele
-   * @param {Apg2DLine} ar1 Primo oggetto Retta (non è importante l'ordine)
-   * @returns {_angoli} Oggetto angoli quadranti (a1, explementary, complementary, ia1, ia2_3, ia4)
-   */
-  anglesAndQuadrants(ar: Apg2DLine) {
-    // Oggetto Angoli quadranti date due rette
-    const r: {
-      angle?: number;
-      a1?: number;
-      complementary?: number;
-      explementary?: number;
-      ia1?: number;
-      ia2_3?: number;
-      ia4?: number;
-    } = {};
 
-    // Copia e ordina ar2.angle (+ grande) ar1.angle (+ piccolo)
-    // TODO @9 questa è una schifezza verificare la copia 
-    const r2 = ar.angle > this.angle ? ar : this;
-    const r1 = ar.angle > this.angle ? this : ar;
+  /** Get angles defined by two intersecting lines
+   */
+  intersectionAngles(aline: Apg2DLine) {
+    const r = {
+      angle: 0,
+      complementary: 0,
+      explementary: 0,
+      q1AngleStart: 0,
+      q2_3AngleStart: 0,
+      q4AngleStart: 0
+    };
+
+    // Copy reference and Swap
+    const line1 = aline.angle > this.angle ? this : aline;
+    const line2 = aline.angle > this.angle ? aline : this;
 
     // Angle value
-    r.angle = r2.angle - r1.angle;
+    r.angle = line2.angle - line1.angle;
 
     // Greater than 180° invert
     if (r.angle > 180) {
       r.angle = 360 - r.angle;
     }
 
-    r.a1 = r.angle;
-    r.complementary = 360 - r.angle; // esplementare
-    r.explementary = 180 - r.angle; // complementare
+    r.complementary = 360 - r.angle;
+    r.explementary = 180 - r.angle;
 
     // Detect angle type based on the symbolic vector of the two lines
-    const s = r2.quadrant + r1.quadrant;
+    const s = line2.quadrant + line1.quadrant;
 
     switch (s) {
       case "++++": // <90 <90
@@ -424,126 +417,127 @@ export class Apg2DLine {
       case "----": // <270 <270
       case "+---": // >270 <270
       case "+-+-": // >270 >270
-        r.ia1 = r1.angle; // angolo inizio quadrante 1
-        r.ia2_3 = r.ia1 + r.a1; // angolo inizio quadrante 2 e quadrante 3
-        r.ia4 = r.ia2_3 + r.explementary + r.a1; // angolo inizio quadrante 4
+        r.q1AngleStart = line1.angle;
+        r.q2_3AngleStart = r.q1AngleStart + r.angle;
+        r.q4AngleStart = r.q2_3AngleStart + r.explementary + r.angle;
         break;
       case "--++": // <270 <90
       case "+-++": // >270 <90
       case "+--+": // >270 <180
-        r.ia1 = r2.angle; // angolo inizio quadrante 1
-        r.ia2_3 = 360 - (r.ia1 + r.a1); // angolo inizio quadrante 2 e quadrante 3
-        r.ia4 = r.ia2_3 + r.explementary; // angolo inizio quadrante 4
+        r.q1AngleStart = line2.angle;
+        r.q2_3AngleStart = 360 - (r.q1AngleStart + r.angle);
+        r.q4AngleStart = r.q2_3AngleStart + r.explementary;
     }
 
     return r;
   }
 
-  /** Verify if the point is part of the line
-   * @param {Apg2DPoint} ap Point to verify
-   * @returns {boolean} True if the point is on the line within epsilon distance
+
+  /** Verifies if the point is part of the line
+   * @remarks True if the point is on the line within epsilon distance
    */
-  public Contains(ap: Apg2DPoint): boolean {
+  public contains(ap: Apg2DPoint): boolean {
     let r = false;
 
     let lv = 0;
     let leps = 0;
     // If the line is vertical
-    if (this.slope === Infinity || this.slope === -Infinity) {
-      leps = ap.x - this.p1.x;
+    if (this._slope === Infinity || this._slope === -Infinity) {
+      leps = ap.x - this._p1.x;
     } else {
-      lv = this.slope * ap.x + this.interceptY;
+      lv = this._slope * ap.x + this._interceptY;
       leps = Math.abs(lv - ap.y);
     }
 
-    r = (leps < Apg2DUtility.APG_ROUNDING_EPSILON);
+    r = (leps < Apg2DUtility.EPSILON);
 
     return r;
   }
 
-  /** Verifica se il punto passato appartiene al segmento passante per i due punti che generano la retta
-   * @param {Apg2DPoint} apr Oggetto Punto da verificare
-   * @ritorna {boolean} Vero se il punto appartiene al segmento
-   */
-  public InTheSegment(apr: Apg2DPoint): boolean {
-    // Verifica innazitutto se il punto è sulla retta
-    let r = this.Contains(apr);
+
+
+  public isInTheSegment(apr: Apg2DPoint): boolean {
+
+    let r = this.contains(apr);
+
     if (r) {
-      // Poi verifica se è nel segmento
-      if (this.p1.x < this.p2.x) {
-        r = (r && apr.x >= this.p1.x && apr.x <= this.p2.x);
+
+      if (this._p1.x < this._p2.x) {
+        r = (apr.x >= this._p1.x && apr.x <= this._p2.x);
       } else {
-        r = (r && apr.x >= this.p2.x && apr.x <= this.p1.x);
+        r = (apr.x >= this._p2.x && apr.x <= this._p1.x);
       }
     }
+
     return r;
   }
 
-  /** Calcola un punto alla distanza specificata da un punto dato su una retta data.
-   * @param {Apg2DPoint} app Oggetto Punto Partenza (deve appartenere alla retta)
-   * @param {number} al Lunghezza del segmento (valore relativo in base al vettore della retta)
-   * @returns {Apg2DPoint} Oggetto Punto (x, y)
+
+  /** Follows the line orientation.
+   * @remarks Point must be on the line
    */
-  public PointAtTheDistanceFromPoint(
-    app: Apg2DPoint,
-    al: number,
+  public pointAtDistanceFromPoint(
+    apointOnLine: Apg2DPoint,
+    adistance: number,
   ): Apg2DPoint | undefined {
-    // Verifica che il punto sia sulla retta
-    if (!this.Contains(app)) {
+
+    if (!this.contains(apointOnLine)) {
       return undefined;
     }
 
     let ldx, ldy;
 
-    // retta orizzontale verso deltaX
-    if (this.angle === 0 || this.angle === 360) {
-      ldx = al;
+    // horizontal to right
+    if (this._angle === 0 || this._angle === 360) {
+      ldx = adistance;
       ldy = 0;
-      // retta orizzontale verso sx
-    } else if (this.angle === 180) {
-      ldx = -al;
+    }
+    // horizontal to left
+    else if (this._angle === 180) {
+      ldx = -adistance;
       ldy = 0;
-      // retta verticale verso alto
-    } else if (this.angle === 90) {
+    }
+    // vertical to top
+    else if (this._angle === 90) {
       ldx = 0;
-      ldy = al;
-      // retta verticale verso basso
-    } else if (this.angle === 270) {
+      ldy = adistance;
+    }
+    // vertical to bottom
+    else if (this._angle === 270) {
       ldx = 0;
-      ldy = -al;
-    } else {
-      // Lunghezza dell'(IPO)tenusa con deltaX = 1
-      const ipo = Math.sqrt(1 * 1 + this.slope * this.slope);
+      ldy = -adistance;
+    }
+    // diagonal
+    else {
+
+      const hypotenuseWithDeltaX1 = Math.sqrt(1 * 1 + this._slope * this._slope);
 
       if (
-        !(ipo === Number.POSITIVE_INFINITY || ipo === Number.NEGATIVE_INFINITY)
+        hypotenuseWithDeltaX1 === Number.POSITIVE_INFINITY ||
+        hypotenuseWithDeltaX1 === Number.NEGATIVE_INFINITY
       ) {
-        // percentuale della lunghezza desiderata
-        const perc = al / ipo;
-        ldx = 1 * perc * Math.sign(this.deltaX);
-        ldy = this.slope * ldx;
-      } else {
-        // Non dovrebbe mai arrivare qui. I casi orizzontale e verticale sono già stati verificati
-        ldx = 0;
-        ldy = 0;
+        // Should never reach here. Horizontal and vertical already handeled
         return undefined;
       }
+
+      /** Have no idea of this algorithm */
+      ldx = adistance / hypotenuseWithDeltaX1 * Math.sign(this._deltaX);
+      ldy = ldx * this._slope;
+
     }
 
-    return new Apg2DPoint(app.x + ldx, app.y + ldy);
+    const r = new Apg2DPoint(apointOnLine.x + ldx, apointOnLine.y + ldy)
+    return r;
   }
 
-  /** Calcola l'offset alla distanza passata di un punto rispetto alla retta corrente
-   * @param {Apg2DPoint} ap Oggetto Punto
-   * @param {number} aoffset Distanza di offset (Valore positivo o negativo)
-   * @returns {Apg2DPoint} Punto offsettato (x, y).
-   */
-  OffsetPoint(ap: Apg2DPoint, aoffset: number): Apg2DPoint {
-    const perpendicular = this.Perpendicular(ap);
-    const intercept = <Apg2DPoint>this.Intersection(perpendicular); // this can't be undefined
-    return <Apg2DPoint>perpendicular.PointAtTheDistanceFromPoint(
+
+  offsetPoint(ap: Apg2DPoint, aoffset: number): Apg2DPoint {
+    const perpendicular = this.perpendicular(ap);
+    const intercept = <Apg2DPoint>this.intersection(perpendicular); // this can't be undefined
+    const r = <Apg2DPoint>perpendicular.pointAtDistanceFromPoint(
       intercept,
       aoffset,
     ); // this can't be undefined
+    return r;
   }
 }

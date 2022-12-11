@@ -57,7 +57,7 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     {
       const rx = 50;
       const ry = 50;
-      const phw: Apg2DPoint = pts[0].HalfwayFrom(pts[1]);
+      const phw: Apg2DPoint = pts[0].halfwayFrom(pts[1]);
       const r: boolean = ((phw.x === rx) && (phw.y === ry));
       this.specWeGot(`Halfway point is (${rx},${ry})`, r);
     }
@@ -66,7 +66,7 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     {
       const rx = 10;
       const ry = -50;
-      const phw: Apg2DPoint = pts[2].HalfwayFrom(pts[0]);
+      const phw: Apg2DPoint = pts[2].halfwayFrom(pts[0]);
       const r: boolean = ((phw.x === rx) && (phw.y === ry));
       this.specWeGot(`Halfway point is (${rx},${ry})`, r);
     }
@@ -91,7 +91,7 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     {
       const rx = pts[4].x;
       const ry = pts[4].y;
-      const nearest: Apg2DPoint = p.NearestIn(pts);
+      const nearest: Apg2DPoint = p.nearestIn(pts);
       console.log(nearest);
       const r: boolean = ((nearest.x === rx) && (nearest.y === ry));
       this.specWeGot(`Nearest point is (${rx},${ry})`, r);
@@ -110,10 +110,10 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     {
       const rx = pts[5].x;
       const ry = pts[5].y;
-      pts[4].SwapWith(pts[5]);
+      pts[4].swapWith(pts[5]);
       const r: boolean = ((pts[4].x === rx) && (pts[4].y === ry));
       this.specWeGot(`After swap first points is (${rx},${ry})`, r);
-      pts[5].SwapWith(pts[4]);
+      pts[5].swapWith(pts[4]);
     }
   }
 
@@ -128,9 +128,9 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     {
       const degrees = 135;
       const distance = 100;
-      const rx = Math.cos(Apg2DUtility.degToRad(degrees)) * distance;
-      const ry = Math.sin(Apg2DUtility.degToRad(degrees)) * distance;
-      const dp = pts[0].DisplacedCopy(degrees, distance);
+      const rx = Math.cos(Apg2DUtility.DegToRad(degrees)) * distance;
+      const ry = Math.sin(Apg2DUtility.DegToRad(degrees)) * distance;
+      const dp = pts[0].displacedCopy(degrees, distance);
       const r: boolean = ((dp.x === rx) && (dp.y === ry));
       this.specWeGot(
         `Its displaced copy by ${degrees}[deg]-${distance}[units] is (${rx.toFixed(4)
