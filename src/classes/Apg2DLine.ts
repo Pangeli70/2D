@@ -485,7 +485,7 @@ export class Apg2DLine {
       return undefined;
     }
 
-    let ldx, ldy;
+    let ldx = 0, ldy = 0;
 
     // horizontal to right
     if (this._angle === 0 || this._angle === 360) {
@@ -509,8 +509,8 @@ export class Apg2DLine {
     }
     // diagonal
     else {
-
-      const hypotenuseWithDeltaX1 = Math.sqrt(1 * 1 + this._slope * this._slope);
+      const deltaYWithDeltaX1 = this._slope;
+      const hypotenuseWithDeltaX1 = Apg2DUtility.Pythagoras(1, deltaYWithDeltaX1);
 
       if (
         hypotenuseWithDeltaX1 === Number.POSITIVE_INFINITY ||
@@ -520,9 +520,11 @@ export class Apg2DLine {
         return undefined;
       }
 
-      /** Have no idea of this algorithm */
-      ldx = adistance / hypotenuseWithDeltaX1 * Math.sign(this._deltaX);
-      ldy = ldx * this._slope;
+      const timesHypotenuseWithDeltaX1InDistance = adistance / hypotenuseWithDeltaX1;
+
+      const ldx = timesHypotenuseWithDeltaX1InDistance * Math.sign(this._deltaX);
+      const ldy = ldx * this._slope;
+
 
     }
 

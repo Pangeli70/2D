@@ -33,23 +33,25 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
       [this.test12_PointsNotOverLine.name]: Uts.eApgUtsSpecRun.yes,
       [this.test13_PointOverVerticalLine.name]: Uts.eApgUtsSpecRun.yes,
 
-      [this.test14A_bisectorCross1.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test14B_bisectorCross2.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test14C_bisectorCross3.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test14D_bisectorCross4.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test14A_BisectorCross1.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test14B_BisectorCross2.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test14C_BisectorCross3.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test14D_BisectorCross4.name]: Uts.eApgUtsSpecRun.yes,
 
-      [this.test15A_bisectorPlus1.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test15B_bisectorPlus2.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test15C_bisectorPlus3.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test15D_bisectorPlus4.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test15A_BisectorPlus1.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test15B_BisectorPlus2.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test15C_BisectorPlus3.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test15D_BisectorPlus4.name]: Uts.eApgUtsSpecRun.yes,
 
-      [this.test16A_bisectorRandom1.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test16B_bisectorRandom2.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test16C_bisectorRandom3.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test16D_bisectorRandom4.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test16A_BisectorRandom1.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test16B_BisectorRandom2.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test16C_BisectorRandom3.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test16D_BisectorRandom4.name]: Uts.eApgUtsSpecRun.yes,
 
-      [this.test17A_bisectorParallel1.name]: Uts.eApgUtsSpecRun.yes,
-      [this.test17B_bisectorParallel2.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test17A_BisectorParallel1.name]: Uts.eApgUtsSpecRun.yes,
+      [this.test17B_BisectorParallel2.name]: Uts.eApgUtsSpecRun.yes,
+
+      [this.test18_PointAtDistanceFromPoint.name]: Uts.eApgUtsSpecRun.yes,
     }
   }
 
@@ -64,25 +66,25 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const y2 = 200;
     let r = false;
 
-    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line in 45 degrees passing from origin and ...`);
+    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line in 45 degrees passing from origin `);
 
+    this.specWeExpect('slope is [1]');
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     r = this.areEqualNoDeep(l1.slope, 1);
-    this.specWeExpect('slope is [1]')
-    this.specWeGot(`slope = [${l1.slope}]`, r);
+    this.specWeGot(`[${l1.slope}]`, r);
 
     const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    r = this.areEqualNoDeep(l1.length, len);
     this.specWeExpect(`length is [${len}]`)
-    this.specWeGot(`length = [${l1.length}]`, r);
+    r = this.areEqualNoDeep(l1.length, len);
+    this.specWeGot(`[${l1.length}]`, r);
 
-    r = this.areEqualNoDeep(l1.angle, 45);
     this.specWeExpect(`angle is [45]`)
-    this.specWeGot(`angle = [${l1.angle}]`, r);
+    r = this.areEqualNoDeep(l1.angle, 45);
+    this.specWeGot(`[${l1.angle}]`, r);
 
-    r = this.areEqualNoDeep(l1.interceptX, 0);
     this.specWeExpect(`intercept X is [0]`)
-    this.specWeGot(`intercept X = [${l1.interceptX}]`, r);
+    r = this.areEqualNoDeep(l1.interceptX, 0);
+    this.specWeGot(`[${l1.interceptX}]`, r);
 
     this.specResume();
   }
@@ -98,22 +100,24 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const y2 = 200;
     let r = false;
 
-    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line is vertical toward up and...`);
+    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line is vertical toward up and`);
 
+    this.specWeExpect(`slope is infinity`);
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     r = this.areEqualNoDeep(l1.slope, Infinity);
-    this.specWeGot(`Slope is infinity [${l1.slope}]`, r);
+    this.specWeGot(`[${l1.slope}]`, r);
 
     const len = y2 - y1;
+    this.specWeExpect(`length is ${len}`);
     r = this.areEqualNoDeep(l1.length, len);
-    this.specWeGot(`Length is ${len} [${l1.length}]`, r);
+    this.specWeGot(`[${l1.length}]`, r);
 
+    this.specWeExpect(`angle is ${90}`);
     r = this.areEqualNoDeep(90, l1.angle);
-    this.specWeGot(`Angle is ${90} [${l1.angle}]`, r);
+    this.specWeGot(`[${l1.angle}]`, r);
 
     this.specResume();
   }
-
 
   test03_LineIsVerticalDown() {
 
@@ -126,21 +130,25 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const y2 = 100;
     let r = false;
 
-    this.specWhen(`When points are (${x1},${y1}) and (${x2},${y2}) the line is vertical toward down and ...`);
+    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line is vertical toward down`);
 
+    this.specWeExpect(`slope is negative infinity`);
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     r = this.areEqualNoDeep(l1.slope, -Infinity);
-    this.specWeGot(`Slope is negative infinity [${l1.slope}]`, r);
+    this.specWeGot(`[${l1.slope}]`, r);
 
     const len = Math.abs(y2 - y1);
+    this.specWeExpect(`length is ${len}`);
     r = this.areEqualNoDeep(l1.length, len);
-    this.specWeGot(`Length is ${len} [${l1.length}]`, r);
+    this.specWeGot(`[${l1.length}]`, r);
 
+    this.specWeExpect(`angle is ${270}`);
     r = this.areEqualNoDeep(l1.angle, 270);
-    this.specWeGot(`Angle is ${270} [${l1.angle}]`, r);
+    this.specWeGot(`[${l1.angle}]`, r);
 
+    this.specWeExpect(`quadrant is ${eApg2DQuadrant.posXnegY}`);
     r = this.areEqualNoDeep(eApg2DQuadrant.posXnegY, l1.quadrant);
-    this.specWeGot(`Quadrant is ${eApg2DQuadrant.posXnegY} [${l1.quadrant}]`, r);
+    this.specWeGot(`[${l1.quadrant}]`, r);
 
     this.specResume();
 
@@ -157,23 +165,24 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const y2 = 100;
     let r = false;
 
-    this.specWhen(`When points are (${x1},${y1}) and (${x2},${y2}) the line is horizontal right and...`);
+    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line is horizontal right`);
 
+    this.specWeExpect(`slope is 0 `);
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     r = this.areEqualNoDeep(l1.slope, 0);
-    this.specWeGot(
-      `Slope is 0 [${l1.slope}]`, r);
+    this.specWeGot(`[${l1.slope}]`, r);
 
     const len = Math.abs(x2 - x1);
+    this.specWeExpect(`length is ${len}`);
     r = this.areEqualNoDeep(l1.length, len);
-    this.specWeGot(`Length is ${len} [${l1.length}]`, r);
+    this.specWeGot(`[${l1.length}]`, r);
 
+    this.specWeExpect(`quadrant is ${eApg2DQuadrant.posXposY}`);
     r = this.areEqualNoDeep(l1.quadrant, eApg2DQuadrant.posXposY);
-    this.specWeGot(`Quadrant is ${eApg2DQuadrant.posXposY} [${l1.quadrant}]`, r);
+    this.specWeGot(`[${l1.quadrant}]`, r);
 
     this.specResume();
   }
-
 
   test05_LineIsHorizontalLeft() {
 
@@ -187,22 +196,25 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     let r = false;
 
-    this.specWhen(`When points are (${x1},${y1}) and (${x2},${y2}) the line is horizontal left and ...`);
+    this.specWhen(`points are (${x1},${y1}) and (${x2},${y2}) the line is horizontal left`);
 
-
+    this.specWeExpect(`slope is -0`);
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     r = this.areEqualNoDeep(l1.slope, -0);
-    this.specWeGot(`Slope is -0 [-${l1.slope}]`, r);
+    this.specWeGot(`[-${l1.slope}]`, r);
 
+    this.specWeExpect(`angle is 180`);
     r = this.areEqualNoDeep(180, l1.angle);
-    this.specWeGot(`Angle is 180 [${l1.angle}]`, r);
+    this.specWeGot(`[${l1.angle}]`, r);
 
     const len = Math.abs(x2 - x1);
+    this.specWeExpect(`length is ${len}`);
     r = this.areEqualNoDeep(l1.length, len);
-    this.specWeGot(`Length is ${len} [${l1.length}]`, r);
+    this.specWeGot(`[${l1.length}]`, r);
 
+    this.specWeExpect(`quadrant is ${eApg2DQuadrant.negXposY}`);
     r = this.areEqualNoDeep(l1.quadrant, eApg2DQuadrant.negXposY);
-    this.specWeGot(`Quadrant is ${eApg2DQuadrant.negXposY} [${l1.quadrant}]`, r);
+    this.specWeGot(`[${l1.quadrant}]`, r);
 
     this.specResume();
   }
@@ -226,20 +238,19 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const p0 = new Apg2DPoint(x0, y0);
     let r = false;
 
-    this.specWhen(`When lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})] they...`);
-
+    this.specWhen(`lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`that intersect at (${p0.x},${p0.y})`);
     const intersec: Apg2DPoint | undefined = l1.intersection(l2);
-
     if (!intersec) {
       r = false;
-      this.specWeGot(`Don't intersect at (${p0.x},${p0.y})`, r)
+      this.specWeGot(`that don't intersect at all`, r)
     } else {
       r = Uts.ApgUtsObj.DeepCompare(intersec, p0);
-      this.specWeGot(`Intersect at (${p0.x},${p0.y}) [(${intersec.x}.${intersec.y})]`, r)
+      this.specWeGot(`[(${intersec.x}.${intersec.y})]`, r)
     }
 
     this.specResume();
@@ -263,18 +274,19 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const p0 = new Apg2DPoint(x0, y0);
     let r = false;
 
-    this.specWhen(`When lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})] they...`);
+    this.specWhen(`lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`that intersect at (${p0.x},${p0.y}`);
     const intersec: Apg2DPoint | undefined = l1.intersection(l2);
     if (!intersec) {
       r = false;
-      this.specWeGot(`Don't intersect at (${p0.x},${p0.y})`, r)
+      this.specWeGot(`that don't intersect at all`, r)
     } else {
       r = Uts.ApgUtsObj.DeepCompare(intersec, p0);
-      this.specWeGot(`Intersect at (${p0.x},${p0.y} [(${intersec.x}.${intersec.y})])`, r)
+      this.specWeGot(`[(${intersec.x}.${intersec.y})])`, r)
     }
 
     this.specResume();
@@ -298,18 +310,19 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const p0 = new Apg2DPoint(x0, y0);
 
     let r = false;
-    this.specWhen(`When lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})] they...`);
+    this.specWhen(`lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`that intersect at (${p0.x},${p0.y})`);
     const intersec: Apg2DPoint | undefined = l1.intersection(l2);
     if (!intersec) {
       r = false;
-      this.specWeGot(`Don't intersect at (${p0.x},${p0.y})`, r)
+      this.specWeGot(`that don't intersect at all)`, r)
     } else {
       r = Uts.ApgUtsObj.DeepCompare(intersec, p0);
-      this.specWeGot(`Intersect at (${p0.x},${p0.y}) [(${intersec.x}.${intersec.y})]`, r)
+      this.specWeGot(`[(${intersec.x}.${intersec.y})]`, r)
     }
 
     this.specResume();
@@ -330,19 +343,19 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     let r = false;
 
-    this.specWhen(`When lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})] they...`);
+    this.specWhen(`lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`taht are parallel with same angles [45,45] and direction`);
     const intersec: Apg2DPoint | undefined = l1.intersection(l2);
-
     r = this.areEqualNoDeep(intersec, undefined);
     r = r && this.areEqualNoDeep(l1.slope, 1);
     r = r && this.areEqualNoDeep(l2.slope, 1);
     r = r && this.areEqualNoDeep(l1.angle, 45);
     r = r && this.areEqualNoDeep(l2.angle, 45);
-    this.specWeGot(`Are parallel with same angle [${l1.angle},${l2.angle}] and direction [45,45]`, r);
+    this.specWeGot(`[${l1.angle},${l2.angle}]`, r);
 
     this.specResume();
   }
@@ -363,26 +376,24 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     let r = false;
 
-    this.specWhen(`When lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})] they...`);
+    this.specWhen(`lines are [(${x1},${y1})(${x2},${y2})] and [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`that are parallel with opposite angles [45,225] and direction`);
     const intersec: Apg2DPoint | undefined = l1.intersection(l2);
-
     r = this.areEqualNoDeep(intersec, undefined);
     r = r && this.areEqualNoDeep(l1.slope, 1);
     r = r && this.areEqualNoDeep(l2.slope, 1);
     r = r && this.areEqualNoDeep(l1.angle, 45);
     r = r && this.areEqualNoDeep(l2.angle, 225);
-
-    this.specWeGot(`Are parallel with opposite angle [${l1.angle},${l2.angle}] and direction [45,225]`, r);
+    this.specWeGot(`[${l1.angle},${l2.angle}]`, r);
 
     this.specResume();
   }
 
   test11_pointsOverLine() {
-
 
     const run = this.specInit(this.test11_pointsOverLine.name);
     if (!run) return;
@@ -407,17 +418,20 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const p0: Apg2DPoint = new Apg2DPoint(x3, y3);
 
-    const pts: Apg2DPoint[] = l1.pointsOverLine(p0, rad);
     const p1: Apg2DPoint = new Apg2DPoint(x4, y4);
     const p2: Apg2DPoint = new Apg2DPoint(x5, y5);
 
+    this.specWeExpect(``);
+    const pts: Apg2DPoint[] = l1.pointsOverLine(p0, rad);
     r = this.areEqualNoDeep(pts.length, 2);
     this.specWeGot(`Point (${p0.x},${p0.y}) is over line`, r);
 
+    this.specWeExpect(``);
     r = pts[0].x == p1.x && pts[0].y == p1.y;
     r = this.areEqualNoDeep(r, true);
     this.specWeGot(`First intersection is (${p1.x},${p1.y}) [(${pts[0].x},${pts[0].y})]`, r);
 
+    this.specWeExpect(``);
     r = pts[1].x == p2.x && pts[1].y == p2.y;
     r = this.areEqualNoDeep(r, true);
     this.specWeGot(`Second intersection is (${p2.x},${p2.y}) [(${pts[1].x},${pts[1].y})]`, r);
@@ -440,13 +454,13 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     let r = false;
 
-    this.specWhen(`When line is [(${x1},${y1})(${x2},${y2})],  point is (${x3},${y3}) and radious is ${rad}`);
+    this.specWhen(`line is [(${x1},${y1})(${x2},${y2})],  point is (${x3},${y3}) and radious is ${rad}`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const p0: Apg2DPoint = new Apg2DPoint(x3, y3);
 
+    this.specWeExpect(``);
     const pts: Apg2DPoint[] = l1.pointsOverLine(p0, rad);
-
     r = this.areEqualNoDeep(pts.length, 0);
     this.specWeGot(`Point (${p0.x},${p0.y}) is off the line because Epsilon is ${Apg2DUtility.EPSILON}`, r);
 
@@ -472,23 +486,25 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     let r = false;
 
-    this.specWhen(`When line is [(${x1},${y1})(${x2},${y2})],  point is (${x3},${y3}) and radious is ${rad} ...`);
-
+    this.specWhen(`line is [(${x1},${y1})(${x2},${y2})],  point is (${x3},${y3}) and radious is ${rad} ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const p0: Apg2DPoint = new Apg2DPoint(x3, y3);
 
-    const pts: Apg2DPoint[] = l1.pointsOverLine(p0, rad);
     const p1: Apg2DPoint = new Apg2DPoint(x4, y4);
     const p2: Apg2DPoint = new Apg2DPoint(x5, y5);
 
+    this.specWeExpect(``);
+    const pts: Apg2DPoint[] = l1.pointsOverLine(p0, rad);
     r = this.areEqualNoDeep(pts.length, 2);
     this.specWeGot(`Point (${p0.x},${p0.y}) is over line`, r);
 
+    this.specWeExpect(``);
     r = pts[0].x == p1.x && pts[0].y == p1.y;
     r = this.areEqualNoDeep(r, true);
     this.specWeGot(`First intersection is (${p1.x},${p1.y}) [(${pts[0].x},${pts[0].y})]`, r);
 
+    this.specWeExpect(``);
     r = pts[1].x == p2.x && pts[1].y == p2.y;
     r = this.areEqualNoDeep(r, true);
     this.specWeGot(`Second intersection is (${p2.x},${p2.y}) [(${pts[1].x},${pts[1].y})]`, r);
@@ -496,10 +512,9 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     this.specResume();
   }
 
+  test14A_BisectorCross1() {
 
-  test14A_bisectorCross1() {
-
-    const run = this.specInit(this.test14A_bisectorCross1.name);
+    const run = this.specInit(this.test14A_BisectorCross1.name);
     if (!run) return;
 
     const x1 = -100;
@@ -511,35 +526,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = 100;
     const y4 = 100;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
-
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 0`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 0`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 90);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 90`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 90`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 180);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 180`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 180`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 270);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 270`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 270`, r);
 
     this.specResume();
   }
 
+  test14B_BisectorCross2() {
 
-  test14B_bisectorCross2() {
-
-    const run = this.specInit(`${this.test14B_bisectorCross2.name}`);
+    const run = this.specInit(`${this.test14B_BisectorCross2.name}`);
     if (!run) return;
 
     const x1 = -100;
@@ -551,35 +568,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = -100;
     const y4 = 100;
 
-
     this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
-
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 90);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 90`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 90`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 180);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 180`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 180`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 270);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 270`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 270`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 0`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 0`, r);
 
     this.specResume();
   }
 
-  test14C_bisectorCross3() {
+  test14C_BisectorCross3() {
 
-    const run = this.specInit(`${this.test14C_bisectorCross3.name}`);
+    const run = this.specInit(`${this.test14C_BisectorCross3.name}`);
     if (!run) return;
 
     const x1 = 100;
@@ -591,34 +610,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = -100;
     const y4 = -100;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 180);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 180`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 180`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 270);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 270`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 270`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 0`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 0`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 90);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 90`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 90`, r);
 
     this.specResume();
   }
 
+  test14D_BisectorCross4() {
 
-  test14D_bisectorCross4() {
-
-    const run = this.specInit(`${this.test14D_bisectorCross4.name}`);
+    const run = this.specInit(`${this.test14D_BisectorCross4.name}`);
     if (!run) return;
 
     const x1 = -100;
@@ -630,34 +652,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = -100;
     const y4 = -100;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
-
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 270);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 270`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 270`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 0`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 0`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 90);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 90`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 90`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 180);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 180`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 180`, r);
 
     this.specResume();
   }
 
-  test15A_bisectorPlus1() {
+  test15A_BisectorPlus1() {
 
-    const run = this.specInit(this.test15A_bisectorPlus1.name);
+    const run = this.specInit(this.test15A_BisectorPlus1.name);
     if (!run) return;
 
     const x1 = 0;
@@ -669,35 +694,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = 100;
     const y4 = 0;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ..`);
-
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ..`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 45);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 45`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 135);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 135`, r);
 
-
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 225);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 225`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 315);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 315`, r);
 
     this.specResume();
   }
 
-  test15B_bisectorPlus2() {
+  test15B_BisectorPlus2() {
 
-    const run = this.specInit(`${this.test15B_bisectorPlus2.name}`);
+    const run = this.specInit(`${this.test15B_BisectorPlus2.name}`);
     if (!run) return;
 
     const x1 = 0;
@@ -709,34 +736,38 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = -100;
     const y4 = 0;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 135);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 135`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 225);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 225`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 315);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 315`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 45);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 45`, r);
 
     this.specResume();
   }
 
-  test15C_bisectorPlus3() {
+  test15C_BisectorPlus3() {
 
-    const run = this.specInit(this.test15C_bisectorPlus3.name);
+    const run = this.specInit(this.test15C_BisectorPlus3.name);
     if (!run) return;
 
     const x1 = 100;
@@ -748,35 +779,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = 0;
     const y4 = -100;
 
-
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 225);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 225`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 315);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 315`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 45);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 45`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 135);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 135`, r);
 
     this.specResume();
   }
 
+  test15D_BisectorPlus4() {
 
-  test15D_bisectorPlus4() {
-
-    const run = this.specInit(`${this.test15D_bisectorPlus4.name}`);
+    const run = this.specInit(`${this.test15D_BisectorPlus4.name}`);
     if (!run) return;
 
     const x1 = 0;
@@ -788,35 +821,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = 100;
     const y4 = 0;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
-
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 315);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 315`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 45);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 45`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 135);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 135`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 225);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 225`, r);
 
     this.specResume();
   }
 
+  test16A_BisectorRandom1() {
 
-  test16A_bisectorRandom1() {
-
-    const run = this.specInit(`${this.test16A_bisectorRandom1.name}`);
+    const run = this.specInit(`${this.test16A_BisectorRandom1.name}`);
     if (!run) return;
 
     const x1 = -10;
@@ -828,32 +863,37 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const x4 = 10;
     const y4 = -100;
 
-    this.specWhen(`When first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]  ...`);
-
+    this.specWhen(`first line is [(${x1},${y1})(${x2},${y2})] and second line is [(${x3},${y3})(${x4},${y4})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle is 0`);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 0`, r);
+    this.specWeGot(`${bisector1.angle}`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle is 90`);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = this.areEqualNoDeep(bisector2.angle, 90);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 90`, r);
+    this.specWeGot(`${bisector2.angle}`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle is 180`);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 180);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 180`, r);
+    this.specWeGot(`${bisector3.angle}`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle is 270`);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 270);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 270`, r);
+    this.specWeGot(`${bisector4.angle}`, r);
+
+    this.specResume();
   }
 
-  test16B_bisectorRandom2() {
+  test16B_BisectorRandom2() {
 
-    const run = this.specInit(`${this.test16B_bisectorRandom2.name}`);
+    const run = this.specInit(`${this.test16B_BisectorRandom2.name}`);
     if (!run) return;
 
     const alpha: number = Apg2DUtility.DegToRad(20);
@@ -878,37 +918,41 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const f = 3;
 
     this.specWhen(
-      `When first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
+      `first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
       },${y2.toFixed(f)})] and second line is [(${x3.toFixed(f)},${y3.toFixed(f)
-      })(${x4.toFixed(f)},${y4.toFixed(f)})]  ...`);
+      })(${x4.toFixed(f)},${y4.toFixed(f)})] `);
 
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle is 300`);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 300);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 300`, r);
+    this.specWeGot(`${bisector1.angle}`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle is 30`);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = Math.abs((bisector2.angle - 30)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 30`, r);
+    this.specWeGot(`${bisector2.angle}`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle is 120`);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 120);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 120`, r);
+    this.specWeGot(`[${bisector3.angle}]`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle  is 210`);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = this.areEqualNoDeep(bisector4.angle, 210);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 210`, r);
+    this.specWeGot(`[${bisector4.angle}]`, r);
 
     this.specResume();
   }
 
-  test16C_bisectorRandom3() {
+  test16C_BisectorRandom3() {
 
-    const run = this.specInit(this.test16C_bisectorRandom3.name);
+    const run = this.specInit(this.test16C_BisectorRandom3.name);
     if (!run) return;
 
     const alpha: number = Apg2DUtility.DegToRad(110);
@@ -933,40 +977,41 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const f = 3;
 
     this.specWhen(
-      `When first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
+      `first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
       },${y2.toFixed(f)})] and second line is [(${x3.toFixed(f)},${y3.toFixed(f)
-      })(${x4.toFixed(f)},${y4.toFixed(f)})]  ...`);
+      })(${x4.toFixed(f)},${y4.toFixed(f)})]`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle is 120`);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 120);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 120`, r);
+    this.specWeGot(`[${bisector1.angle}]`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle is 210`);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = Math.abs((bisector2.angle - 210)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 210`, r);
+    this.specWeGot(`[${bisector2.angle}]`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle  is 300`);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 300`, r);
-
     r = this.areEqualNoDeep(bisector3.angle, 300);
+    this.specWeGot(`[${bisector3.angle}]`, r);
 
+    this.specWeExpect(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle  is 30`);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 30`, r);
-
-    r = Math.abs((bisector4.angle - 30)) <
-      Apg2DUtility.EPSILON;
+    r = Math.abs((bisector4.angle - 30)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
+    this.specWeGot(`[${bisector4.angle}]`, r);
 
     this.specResume();
   }
 
-  test16D_bisectorRandom4() {
+  test16D_BisectorRandom4() {
 
-    const run = this.specInit(this.test16D_bisectorRandom4.name);
+    const run = this.specInit(this.test16D_BisectorRandom4.name);
     if (!run) return;
 
     const alpha: number = Apg2DUtility.DegToRad(200);
@@ -991,7 +1036,7 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const f = 3;
 
     this.specWhen(
-      `When first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
+      `first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
       },${y2.toFixed(f)})] and second line is [(${x3.toFixed(f)},${y3.toFixed(f)
       })(${x4.toFixed(f)},${y4.toFixed(f)})]  ...`);
 
@@ -999,30 +1044,34 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 250);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 250`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 250`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = Math.abs((bisector2.angle - 340)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 340`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 340`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 70);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 70`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 70`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = Math.abs((bisector4.angle - 160)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 160`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 160`, r);
 
     this.specResume();
   }
 
-  test17A_bisectorParallel1() {
+  test17A_BisectorParallel1() {
 
-    const run = this.specInit(this.test17A_bisectorParallel1.name);
+    const run = this.specInit(this.test17A_BisectorParallel1.name);
     if (!run) return;
 
     const x1 = -100;
@@ -1038,40 +1087,45 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
 
     this.specWhen(
-      `When first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
+      `first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
       },${y2.toFixed(f)})] and second line is [(${x3.toFixed(f)},${y3.toFixed(f)
       })(${x4.toFixed(f)},${y4.toFixed(f)})]  ...`);
 
     const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
     const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
 
+    this.specWeExpect(``);
     const bisector1: Apg2DLine = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 45);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 45`, r);
 
+    this.specWeExpect(``);
     r = this.areEqualNoDeep(bisector1.interceptX, -50);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector X intercept [${bisector1.interceptX}] is -50`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) bisector X intercept [${bisector1.interceptX}] is -50`, r);
 
+    this.specWeExpect(``);
     const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = Math.abs((bisector2.angle - 135)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 135`, r);
 
+    this.specWeExpect(``);
     const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 225);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 225`, r);
 
+    this.specWeExpect(``);
     const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = Math.abs((bisector4.angle - 315)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 315`, r);
 
     this.specResume();
   }
 
-  test17B_bisectorParallel2() {
+  test17B_BisectorParallel2() {
 
-    const run = this.specInit(this.test17B_bisectorParallel2.name);
+    const run = this.specInit(this.test17B_BisectorParallel2.name);
     if (!run) return;
 
     const x1 = 110;
@@ -1085,39 +1139,73 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
 
     const f = 0;
 
-
     this.specWhen(
-      `When first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
+      `first line is [(${x1.toFixed(f)},${y1.toFixed(f)})(${x2.toFixed(f)
       },${y2.toFixed(f)})] and second line is [(${x3.toFixed(f)},${y3.toFixed(f)
       })(${x4.toFixed(f)},${y4.toFixed(f)})]  ...`);
 
-    const l1: Apg2DLine = Apg2DLine.Build(x1, y1, x2, y2);
-    const l2: Apg2DLine = Apg2DLine.Build(x3, y3, x4, y4);
+    const l1 = Apg2DLine.Build(x1, y1, x2, y2);
+    const l2 = Apg2DLine.Build(x3, y3, x4, y4);
 
-    const bisector1: Apg2DLine = l1.bisector(l2);
+    this.specWeExpect(``);
+    const bisector1 = l1.bisector(l2);
     let r = this.areEqualNoDeep(bisector1.angle, 135);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector angle [${bisector1.angle}] is 135`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) the bisector angle [${bisector1.angle}] is 135`, r);
 
+    this.specWeExpect(``);
     r = this.areEqualNoDeep(bisector1.interceptX, 0);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXposY}) bisector X intercept [${bisector1.interceptX}] is 0`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXposY}) bisector X intercept [${bisector1.interceptX}] is 0`, r);
 
-    const bisector2: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXposY);
+    this.specWeExpect(``);
+    const bisector2 = l1.bisector(l2, eApg2DQuadrant.negXposY);
     r = Math.abs((bisector2.angle - 225)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXposY}) bisector angle [${bisector2.angle}] is 225`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXposY}) the bisector angle [${bisector2.angle}] is 225`, r);
 
-    const bisector3: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.negXnegY);
+    this.specWeExpect(``);
+    const bisector3 = l1.bisector(l2, eApg2DQuadrant.negXnegY);
     r = this.areEqualNoDeep(bisector3.angle, 315);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.negXnegY}) bisector angle [${bisector3.angle}] is 315`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.negXnegY}) the bisector angle [${bisector3.angle}] is 315`, r);
 
-    const bisector4: Apg2DLine = l1.bisector(l2, eApg2DQuadrant.posXnegY);
+    this.specWeExpect(``);
+    const bisector4 = l1.bisector(l2, eApg2DQuadrant.posXnegY);
     r = Math.abs((bisector4.angle - 45)) < Apg2DUtility.EPSILON;
     r = this.areEqualNoDeep(r, true);
-    this.specWeGot(`With quadrant (${eApg2DQuadrant.posXnegY}) bisector angle [${bisector4.angle}] is 45`, r);
+    this.specWeGot(`in quadrant (${eApg2DQuadrant.posXnegY}) the bisector angle [${bisector4.angle}] is 45`, r);
 
     this.specResume();
   }
 
+  test18_PointAtDistanceFromPoint() {
+
+    const run = this.specInit(this.test18_PointAtDistanceFromPoint.name);
+    if (!run) return;
+
+    const x1 = 100;
+    const y1 = 100;
+    const x2 = 400;
+    const y2 = 400;
+    const x3 = 250;
+    const y3 = 250;
+    const x4 = 200;
+    const y4 = 300;
+    const offset = Math.sqrt(100 ** 2 + 100 ** 2) / 2;
+
+    const f = 2;
+    this.specWhen(
+      `When line is [(${x1},${y1})(${x2},${y2})], point over line is (${x3},${y3}) and offset is ${offset}  ...`);
+
+    const line = Apg2DLine.Build(x1, y1, x2, y2);
+    const pointOverLine = new Apg2DPoint(x3, y3);
+    const testPoint = new Apg2DPoint(x4, y4);
+
+    this.specWeExpect(`(${testPoint.x}, ${testPoint.y})`);
+    const offsettedPoint = line.pointAtDistanceFromPoint(pointOverLine, offset);
+    const r = this.areDeepEqual(offsettedPoint, testPoint);
+    this.specWeGot(`(${offsettedPoint!.x}, ${offsettedPoint!.y})`, r);
+
+    this.specResume();
+  }
 
 
   override specExecuteSync() {
@@ -1139,25 +1227,24 @@ export class Apg2DLineSpec extends Uts.ApgUtsSpecable {
     this.test12_PointsNotOverLine();
     this.test13_PointOverVerticalLine();
 
-    this.test14A_bisectorCross1();
-    this.test14B_bisectorCross2();
-    this.test14C_bisectorCross3();
-    this.test14D_bisectorCross4();
+    this.test14A_BisectorCross1();
+    this.test14B_BisectorCross2();
+    this.test14C_BisectorCross3();
+    this.test14D_BisectorCross4();
 
-    this.test15A_bisectorPlus1();
-    this.test15B_bisectorPlus2();
-    this.test15C_bisectorPlus3();
-    this.test15D_bisectorPlus4();
+    this.test15A_BisectorPlus1();
+    this.test15B_BisectorPlus2();
+    this.test15C_BisectorPlus3();
+    this.test15D_BisectorPlus4();
 
-    this.test16A_bisectorRandom1();
-    this.test16B_bisectorRandom2();
-    this.test16C_bisectorRandom3();
-    this.test16D_bisectorRandom4();
+    this.test16A_BisectorRandom1();
+    this.test16B_BisectorRandom2();
+    this.test16C_BisectorRandom3();
+    this.test16D_BisectorRandom4();
 
-    this.test17A_bisectorParallel1();
-    this.test17B_bisectorParallel2();
+    this.test17A_BisectorParallel1();
+    this.test17B_BisectorParallel2();
 
+    this.test18_PointAtDistanceFromPoint();
   }
-
-
 }

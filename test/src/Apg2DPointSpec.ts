@@ -19,7 +19,8 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     super(import.meta.url)
 
     this.flags = {
-      [this.Test01_GetWalfWayPoint.name]: Uts.eApgUtsSpecRun.yes,
+      [this.Test01a_GetWalfWayPoint.name]: Uts.eApgUtsSpecRun.yes,
+      [this.Test01b_GetWalfWayPoint.name]: Uts.eApgUtsSpecRun.yes,
       [this.Test02_NearestIn.name]: Uts.eApgUtsSpecRun.yes,
       [this.Test03_SwapWith.name]: Uts.eApgUtsSpecRun.yes,
       [this.Test04_DisplacedCopy.name]: Uts.eApgUtsSpecRun.yes,
@@ -46,31 +47,46 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
 
   }
 
-  Test01_GetWalfWayPoint() {
+  Test01a_GetWalfWayPoint() {
 
-    const run = this.specInit(this.Test01_GetWalfWayPoint.name);
+    const run = this.specInit(this.Test01a_GetWalfWayPoint.name);
     if (!run) return;
 
     const pts = this.points;
 
-    this.specWhen(`When points are (${pts[0].x},${pts[0].y}) and (${pts[1].x},${pts[1].y})`);
-    {
-      const rx = 50;
-      const ry = 50;
-      const phw: Apg2DPoint = pts[0].halfwayFrom(pts[1]);
-      const r: boolean = ((phw.x === rx) && (phw.y === ry));
-      this.specWeGot(`Halfway point is (${rx},${ry})`, r);
-    }
+    this.specWhen(`points are (${pts[0].x},${pts[0].y}) and (${pts[1].x},${pts[1].y})`);
 
-    this.specWhen(`When points are (${pts[2].x},${pts[2].y}) and (${pts[0].x},${pts[0].y})`)
-    {
-      const rx = 10;
-      const ry = -50;
-      const phw: Apg2DPoint = pts[2].halfwayFrom(pts[0]);
-      const r: boolean = ((phw.x === rx) && (phw.y === ry));
-      this.specWeGot(`Halfway point is (${rx},${ry})`, r);
-    }
+    const rx = 50;
+    const ry = 50;
+
+    this.specWeExpect(`halfway point is (${rx},${ry})`);
+    const phw: Apg2DPoint = pts[0].halfwayFrom(pts[1]);
+    const r: boolean = ((phw.x === rx) && (phw.y === ry));
+    this.specWeGot(`(${phw.x},${phw.y})`, r);
+
+    this.specResume();
+
   }
+
+  Test01b_GetWalfWayPoint() {
+
+    const run = this.specInit(this.Test01b_GetWalfWayPoint.name);
+    if (!run) return;
+
+    const pts = this.points;
+
+    this.specWhen(`points are (${pts[2].x},${pts[2].y}) and (${pts[0].x},${pts[0].y})`)
+
+    const rx = 10;
+    const ry = -50;
+    this.specWeExpect(`halfway point is (${rx},${ry})`);
+    const phw: Apg2DPoint = pts[2].halfwayFrom(pts[0]);
+    const r: boolean = ((phw.x === rx) && (phw.y === ry));
+    this.specWeGot(`(${phw.x},${phw.y})`, r);
+
+    this.specResume();
+  }
+
 
   Test02_NearestIn() {
 
@@ -87,17 +103,18 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     });
     strigifiedPts = `[${strigifiedPts}]`;
 
-    this.specWhen(`When point is (${p.x},${p.y}) and points are (${strigifiedPts})`);
-    {
-      const rx = pts[4].x;
-      const ry = pts[4].y;
-      const nearest: Apg2DPoint = p.nearestIn(pts);
-      console.log(nearest);
-      const r: boolean = ((nearest.x === rx) && (nearest.y === ry));
-      this.specWeGot(`Nearest point is (${rx},${ry})`, r);
-    }
+    this.specWhen(`point is (${p.x},${p.y}) and points are (${strigifiedPts})`);
 
+    const rx = pts[4].x;
+    const ry = pts[4].y;
+    this.specWeExpect(`nearest point is (${rx},${ry})`);
+    const nearest: Apg2DPoint = p.nearestIn(pts);
+    const r: boolean = ((nearest.x === rx) && (nearest.y === ry));
+    this.specWeGot(`(${nearest.x},${nearest.y})`, r);
+
+    this.specResume();
   }
+
 
   Test03_SwapWith() {
 
@@ -106,16 +123,19 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
 
     const pts = this.points;
 
-    this.specWhen(`When points are (${pts[4].x},${pts[4].y}) and (${pts[5].x},${pts[5].y})`);
-    {
-      const rx = pts[5].x;
-      const ry = pts[5].y;
-      pts[4].swapWith(pts[5]);
-      const r: boolean = ((pts[4].x === rx) && (pts[4].y === ry));
-      this.specWeGot(`After swap first points is (${rx},${ry})`, r);
-      pts[5].swapWith(pts[4]);
-    }
+    this.specWhen(`point1 is (${pts[4].x},${pts[4].y}) and point2 is (${pts[5].x},${pts[5].y})`);
+    const rx = pts[5].x;
+    const ry = pts[5].y;
+
+    this.specWeExpect(`point1 after swap is (${rx},${ry})`);
+    pts[4].swapWith(pts[5]);
+    const r: boolean = ((pts[4].x === rx) && (pts[4].y === ry));
+    this.specWeGot(`(${pts[4].x},${pts[4].y})`, r);
+    pts[5].swapWith(pts[4]);
+
+    this.specResume();
   }
+
 
   Test04_DisplacedCopy() {
 
@@ -124,23 +144,25 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
 
     const pts = this.points;
 
-    this.specWhen(`When point is (${pts[0].x},${pts[0].y})`);
-    {
-      const degrees = 135;
-      const distance = 100;
-      const rx = Math.cos(Apg2DUtility.DegToRad(degrees)) * distance;
-      const ry = Math.sin(Apg2DUtility.DegToRad(degrees)) * distance;
-      const dp = pts[0].displacedCopy(degrees, distance);
-      const r: boolean = ((dp.x === rx) && (dp.y === ry));
-      this.specWeGot(
-        `Its displaced copy by ${degrees}[deg]-${distance}[units] is (${rx.toFixed(4)
-        },${ry.toFixed(4)})`, r);
-    }
+    this.specWhen(`point is (${pts[0].x},${pts[0].y})`);
+
+    const degrees = 135;
+    const distance = 100;
+    const rx = Math.cos(Apg2DUtility.DegToRad(degrees)) * distance;
+    const ry = Math.sin(Apg2DUtility.DegToRad(degrees)) * distance;
+
+    this.specWeExpect(`its displaced copy by (${degrees}) degrees ad (${distance}) units is (${rx},${ry})`);
+    const dp = pts[0].displacedCopy(degrees, distance);
+    const r: boolean = ((dp.x === rx) && (dp.y === ry));
+    this.specWeGot(`(${dp.x.toFixed(4)},${dp.y.toFixed(4)})`, r);
+
+    this.specResume();
   }
 
   override specExecuteSync() {
 
-    this.Test01_GetWalfWayPoint();
+    this.Test01a_GetWalfWayPoint();
+    this.Test01b_GetWalfWayPoint();
     this.Test02_NearestIn();
     this.Test03_SwapWith();
     this.Test04_DisplacedCopy();
