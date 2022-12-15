@@ -509,23 +509,12 @@ export class Apg2DLine {
     }
     // diagonal
     else {
-      const deltaYWithDeltaX1 = this._slope;
+      const deltaYWithDeltaX1 = -1 / this._slope;
       const hypotenuseWithDeltaX1 = Apg2DUtility.Pythagoras(1, deltaYWithDeltaX1);
-
-      if (
-        hypotenuseWithDeltaX1 === Number.POSITIVE_INFINITY ||
-        hypotenuseWithDeltaX1 === Number.NEGATIVE_INFINITY
-      ) {
-        // Should never reach here. Horizontal and vertical already handeled
-        return undefined;
-      }
-
       const timesHypotenuseWithDeltaX1InDistance = adistance / hypotenuseWithDeltaX1;
 
-      const ldx = timesHypotenuseWithDeltaX1InDistance * Math.sign(this._deltaX);
-      const ldy = ldx * this._slope;
-
-
+      ldx = timesHypotenuseWithDeltaX1InDistance * Math.sign(deltaYWithDeltaX1);
+      ldy = deltaYWithDeltaX1 * ldx;
     }
 
     const r = new Apg2DPoint(apointOnLine.x + ldx, apointOnLine.y + ldy)

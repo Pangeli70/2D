@@ -61,7 +61,7 @@ export class Apg2DPoint implements IApg2DPoint {
 
     for (let i = 0; i < apoints.length; i++) {
       const deltaX = this.x - apoints[i].x;
-      const deltaY = this.y - apoints[i].x;
+      const deltaY = this.y - apoints[i].y;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       if (distance < shortestDistance) {
         index = i;

@@ -11,17 +11,21 @@ import { Uts } from "./deps.ts";
 import { Apg2DLineSpec } from "./test/src/Apg2DLineSpec.ts";
 import { Apg2DPointSpec } from "./test/src/Apg2DPointSpec.ts";
 
-async function Apg2DTests(arun: Uts.eApgUtsSpecRun) {
+export async function Apg2DTests(arun: Uts.eApgUtsSpecRun) {
 
+  
   if (arun != Uts.eApgUtsSpecRun.yes) return;
+  
+  const URI = "https://apg-tst.deno.dev/store";
+  // const URI = "http://localhost:49609/store";
 
   const pointSpec = new Apg2DPointSpec()
   pointSpec.specRunSync(Uts.eApgUtsSpecRun.yes);
-  const _r1 = await pointSpec.sendToTestService("http://localhost:49609/store", "A2D", "Apg2DPointSpec");
+  const _r1 = await pointSpec.sendToTestService(URI, "A2D", "Apg2DPointSpec");
 
   const lineSpec = new Apg2DLineSpec()
   lineSpec.specRunSync(Uts.eApgUtsSpecRun.yes);
-  const _r2 = await lineSpec.sendToTestService("http://localhost:49609/store", "A2D", "Apg2DLineSpec");
+  const _r2 = await lineSpec.sendToTestService(URI, "A2D", "Apg2DLineSpec");
 }
 
-Apg2DTests(Uts.eApgUtsSpecRun.yes);
+await Apg2DTests(Uts.eApgUtsSpecRun.yes);
