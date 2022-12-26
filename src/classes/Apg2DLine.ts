@@ -18,8 +18,10 @@ import { eApg2DQuadrant } from "../enums/eApg2DQuadrant.ts";
  */
 export class Apg2DLine {
   private _p1: Apg2DPoint;
+  get p1() { return this._p1; }
 
   private _p2: Apg2DPoint;
+  get p2() { return this._p2; }
 
   private _deltaX: number;
 
@@ -33,6 +35,7 @@ export class Apg2DLine {
   get angle() { return this._angle; }
 
   private _interceptY: number;
+  get interceptY() { return this._interceptY; }
 
   private _interceptX: number;
   get interceptX() { return this._interceptX; }
@@ -41,6 +44,7 @@ export class Apg2DLine {
   get length() { return this._length; }
 
   private _vector: Apg2DPoint;
+  get vector() { return this._vector; }
 
   private _quadrant: eApg2DQuadrant;
   get quadrant() { return this._quadrant; }
