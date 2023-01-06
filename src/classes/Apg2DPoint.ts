@@ -50,7 +50,7 @@ export class Apg2DPoint implements IApg2DPoint {
 
   public distanceFrom(apoint: Apg2DPoint) {
     const deltaX = this.x - apoint.x;
-    const deltaY = this.y - apoint.x;
+    const deltaY = this.y - apoint.y;
     const r = Apg2DUtility.Pythagoras(deltaX, deltaY);
     return r;
   }
