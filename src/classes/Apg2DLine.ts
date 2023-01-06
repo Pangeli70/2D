@@ -513,12 +513,11 @@ export class Apg2DLine {
     }
     // diagonal
     else {
-      const deltaYWithDeltaX1 = -1 / this._slope;
-      const hypotenuseWithDeltaX1 = Apg2DUtility.Pythagoras(1, deltaYWithDeltaX1);
+      const hypotenuseWithDeltaX1 = Apg2DUtility.Pythagoras(1, this._slope);
       const timesHypotenuseWithDeltaX1InDistance = adistance / hypotenuseWithDeltaX1;
 
-      ldx = timesHypotenuseWithDeltaX1InDistance * Math.sign(deltaYWithDeltaX1);
-      ldy = deltaYWithDeltaX1 * ldx;
+      ldx = timesHypotenuseWithDeltaX1InDistance * Math.sign(this._slope);
+      ldy = this._slope * ldx;
     }
 
     const r = new Apg2DPoint(apointOnLine.x + ldx, apointOnLine.y + ldy)
