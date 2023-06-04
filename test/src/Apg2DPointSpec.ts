@@ -4,13 +4,14 @@
  * @version 0.0.1 [APG 2021/02/21]
  * @version 0.8.0 [APG 2021/02/21] Porting to Deno
  * @version 0.9.2 [APG 2022/11/24] Github Beta
+ * @version 0.9.7 [APG 2023/06/03] Separation of concerns lib/srv
  * ------------------------------------------------------------------------
 */
-import { Uts } from "../../deps.ts"
+import { Spc } from "../deps.ts"
 import { Apg2DPoint, Apg2DUtility } from "../../mod.ts";
 
 
-export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
+export class Apg2DPointSpec extends Spc.ApgSpcSpec {
 
 
   readonly points: Apg2DPoint[] = [];
@@ -19,11 +20,11 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     super(import.meta.url)
 
     this.flags = {
-      [this.Test01a_GetWalfWayPoint.name]: Uts.eApgUtsSpecRun.yes,
-      [this.Test01b_GetWalfWayPoint.name]: Uts.eApgUtsSpecRun.yes,
-      [this.Test02_NearestIn.name]: Uts.eApgUtsSpecRun.yes,
-      [this.Test03_SwapWith.name]: Uts.eApgUtsSpecRun.yes,
-      [this.Test04_DisplacedCopy.name]: Uts.eApgUtsSpecRun.yes,
+      [this.Test01a_GetWalfWayPoint.name]: Spc.eApgSpcRun.yes,
+      [this.Test01b_GetWalfWayPoint.name]: Spc.eApgSpcRun.yes,
+      [this.Test02_NearestIn.name]: Spc.eApgSpcRun.yes,
+      [this.Test03_SwapWith.name]: Spc.eApgSpcRun.yes,
+      [this.Test04_DisplacedCopy.name]: Spc.eApgSpcRun.yes,
     }
 
     const p0 = new Apg2DPoint(0, 0);
@@ -49,48 +50,54 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
 
   Test01a_GetWalfWayPoint() {
 
-    const run = this.specInit(this.Test01a_GetWalfWayPoint.name);
+    const spec = this.specifier;
+
+    const run = spec.Init(this.Test01a_GetWalfWayPoint.name, this.flags);
     if (!run) return;
 
     const pts = this.points;
 
-    this.specWhen(`points are (${pts[0].x},${pts[0].y}) and (${pts[1].x},${pts[1].y})`);
+    spec.When(`points are (${pts[0].x},${pts[0].y}) and (${pts[1].x},${pts[1].y})`);
 
     const rx = 50;
     const ry = 50;
 
-    this.specWeExpect(`halfway point is (${rx},${ry})`);
+    spec.WeExpect(`halfway point is (${rx},${ry})`);
     const phw: Apg2DPoint = pts[0].halfwayFrom(pts[1]);
     const r: boolean = ((phw.x === rx) && (phw.y === ry));
-    this.specWeGot(`(${phw.x},${phw.y})`, r);
+    spec.WeGot(`(${phw.x},${phw.y})`, r);
 
-    this.specResume();
+    spec.Resume();
 
   }
 
   Test01b_GetWalfWayPoint() {
 
-    const run = this.specInit(this.Test01b_GetWalfWayPoint.name);
+    const spec = this.specifier;
+
+    const run = spec.Init(this.Test01b_GetWalfWayPoint.name, this.flags);
     if (!run) return;
 
     const pts = this.points;
 
-    this.specWhen(`points are (${pts[2].x},${pts[2].y}) and (${pts[0].x},${pts[0].y})`)
+    spec.When(`points are (${pts[2].x},${pts[2].y}) and (${pts[0].x},${pts[0].y})`)
 
     const rx = 10;
     const ry = -50;
-    this.specWeExpect(`halfway point is (${rx},${ry})`);
+    spec.WeExpect(`halfway point is (${rx},${ry})`);
     const phw: Apg2DPoint = pts[2].halfwayFrom(pts[0]);
     const r: boolean = ((phw.x === rx) && (phw.y === ry));
-    this.specWeGot(`(${phw.x},${phw.y})`, r);
+    spec.WeGot(`(${phw.x},${phw.y})`, r);
 
-    this.specResume();
+    spec.Resume();
   }
 
 
   Test02_NearestIn() {
 
-    const run = this.specInit(this.Test02_NearestIn.name);
+    const spec = this.specifier;
+
+    const run = spec.Init(this.Test02_NearestIn.name, this.flags);
     if (!run) return;
 
     const pts = this.points;
@@ -103,63 +110,67 @@ export class Apg2DPointSpec extends Uts.ApgUtsSpecable {
     });
     strigifiedPts = `[${strigifiedPts}]`;
 
-    this.specWhen(`point is (${p.x},${p.y}) and points are (${strigifiedPts})`);
+    spec.When(`point is (${p.x},${p.y}) and points are (${strigifiedPts})`);
 
     const rx = pts[4].x;
     const ry = pts[4].y;
-    this.specWeExpect(`nearest point is (${rx},${ry})`);
+    spec.WeExpect(`nearest point is (${rx},${ry})`);
     const nearest: Apg2DPoint = p.nearestIn(pts);
     const r: boolean = ((nearest.x === rx) && (nearest.y === ry));
-    this.specWeGot(`(${nearest.x},${nearest.y})`, r);
+    spec.WeGot(`(${nearest.x},${nearest.y})`, r);
 
-    this.specResume();
+    spec.Resume();
   }
 
 
   Test03_SwapWith() {
 
-    const run = this.specInit(this.Test03_SwapWith.name);
+    const spec = this.specifier;
+
+    const run = spec.Init(this.Test03_SwapWith.name, this.flags);
     if (!run) return;
 
     const pts = this.points;
 
-    this.specWhen(`point1 is (${pts[4].x},${pts[4].y}) and point2 is (${pts[5].x},${pts[5].y})`);
+    spec.When(`point1 is (${pts[4].x},${pts[4].y}) and point2 is (${pts[5].x},${pts[5].y})`);
     const rx = pts[5].x;
     const ry = pts[5].y;
 
-    this.specWeExpect(`point1 after swap is (${rx},${ry})`);
+    spec.WeExpect(`point1 after swap is (${rx},${ry})`);
     pts[4].swapWith(pts[5]);
     const r: boolean = ((pts[4].x === rx) && (pts[4].y === ry));
-    this.specWeGot(`(${pts[4].x},${pts[4].y})`, r);
+    spec.WeGot(`(${pts[4].x},${pts[4].y})`, r);
     pts[5].swapWith(pts[4]);
 
-    this.specResume();
+    spec.Resume();
   }
 
 
   Test04_DisplacedCopy() {
 
-    const run = this.specInit(this.Test04_DisplacedCopy.name);
+    const spec = this.specifier;
+
+    const run = spec.Init(this.Test04_DisplacedCopy.name, this.flags);
     if (!run) return;
 
     const pts = this.points;
 
-    this.specWhen(`point is (${pts[0].x},${pts[0].y})`);
+    spec.When(`point is (${pts[0].x},${pts[0].y})`);
 
     const degrees = 135;
     const distance = 100;
     const rx = Math.cos(Apg2DUtility.DegToRad(degrees)) * distance;
     const ry = Math.sin(Apg2DUtility.DegToRad(degrees)) * distance;
 
-    this.specWeExpect(`its displaced copy by (${degrees}) degrees ad (${distance}) units is (${rx},${ry})`);
+    spec.WeExpect(`its displaced copy by (${degrees}) degrees ad (${distance}) units is (${rx},${ry})`);
     const dp = pts[0].displacedCopy(degrees, distance);
     const r: boolean = ((dp.x === rx) && (dp.y === ry));
-    this.specWeGot(`(${dp.x.toFixed(4)},${dp.y.toFixed(4)})`, r);
+    spec.WeGot(`(${dp.x.toFixed(4)},${dp.y.toFixed(4)})`, r);
 
-    this.specResume();
+    spec.Resume();
   }
 
-  override specExecuteSync() {
+  override executeSync() {
 
     this.Test01a_GetWalfWayPoint();
     this.Test01b_GetWalfWayPoint();

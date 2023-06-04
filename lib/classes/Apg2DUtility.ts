@@ -1,15 +1,19 @@
 /** -----------------------------------------------------------------------
- * @module [2D]
+ * @module [apg-a2d]
  * @author [APG] ANGELI Paolo Giusto
  * @version 0.0.1 [APG 2017/10/27]
  * @version 0.5.0 [APG 2018/11/25]
  * @version 0.8.0 [APG 2021/02/21] Porting to Deno
  * @version 0.9.2 [APG 2022/11/24] Github Beta
  * @version 0.9.3 [APG 2022/12/11] Renaming and cleanup
+ * @version 0.9.7 [APG 2023/06/03] Separation of concerns lib/srv
  * -----------------------------------------------------------------------
  */
 import { eApg2DQuadrant } from "../enums/eApg2DQuadrant.ts";
 
+/**
+ * 2D operations utilities
+ */
 export abstract class Apg2DUtility {
   // Constat to manage rounding errors and coordinate comparison
   static readonly EPSILON = 0.000001;
@@ -23,9 +27,9 @@ export abstract class Apg2DUtility {
   }
 
   /** Get the inclination of a segment as angle by slope
-     * @param {number} aslope angular coefficient of a segment
-     * @param {string} aquadrant symbol that describes the orientation quadrant
-     * @returns {number} orientation in angle (standard quadrants)
+     * @param  aslope angular coefficient of a segment
+     * @param aquadrant symbol that describes the orientation quadrant
+     * @returns  orientation in angle (standard quadrants)
      */
   static DegreesFromSlope(aslope: number, aquadrant: eApg2DQuadrant) {
     let r = 0;

@@ -5,27 +5,28 @@
  * @version 0.8.0 [APG 2021/02/21] Porting to Deno
  * @version 0.9.2 [APG 2022/11/24] Github Beta
  * @version 0.9.3 [APG 2022/12/13] Store result on remote host
+ * @version 0.9.7 [APG 2023/06/03] Separation of concerns lib/srv
  * ------------------------------------------------------------------------
 */
-import { Uts } from "./deps.ts";
+import { Spc } from "./test/deps.ts";
 import { Apg2DLineSpec } from "./test/src/Apg2DLineSpec.ts";
 import { Apg2DPointSpec } from "./test/src/Apg2DPointSpec.ts";
 
-export async function Apg2DTests(arun: Uts.eApgUtsSpecRun) {
+export async function Apg2DTests(arun: Spc.eApgSpcRun) {
 
   
-  if (arun != Uts.eApgUtsSpecRun.yes) return;
+  if (arun != Spc.eApgSpcRun.yes) return;
   
   const URI = "https://apg-tst.deno.dev/store";
   // const URI = "http://localhost:49609/store";
 
   const pointSpec = new Apg2DPointSpec()
-  pointSpec.specRunSync(Uts.eApgUtsSpecRun.yes);
-  const _r1 = await pointSpec.sendToTestService(URI, "A2D", "Apg2DPointSpec");
+  pointSpec.RunSync(Spc.eApgSpcRun.yes);
+  const _r1 = await pointSpec.SendEventsToTestService(URI, "A2D", "Apg2DPointSpec");
 
   const lineSpec = new Apg2DLineSpec()
-  lineSpec.specRunSync(Uts.eApgUtsSpecRun.yes);
-  const _r2 = await lineSpec.sendToTestService(URI, "A2D", "Apg2DLineSpec");
+  lineSpec.RunSync(Spc.eApgSpcRun.yes);
+  const _r2 = await lineSpec.SendEventsToTestService(URI, "A2D", "Apg2DLineSpec");
 }
 
-await Apg2DTests(Uts.eApgUtsSpecRun.yes);
+await Apg2DTests(Spc.eApgSpcRun.yes);
