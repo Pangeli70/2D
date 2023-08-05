@@ -18,7 +18,7 @@ export async function Apg2DTests(arun: Spc.eApgSpcRun) {
   if (arun != Spc.eApgSpcRun.yes) return;
   
   const URI = "https://apg-tst.deno.dev/store";
-  // const URI = "http://localhost:49609/store";
+  //const URI = "http://localhost:1332/store";
 
   const pointSpec = new Apg2DPointSpec()
   pointSpec.RunSync(Spc.eApgSpcRun.yes);
